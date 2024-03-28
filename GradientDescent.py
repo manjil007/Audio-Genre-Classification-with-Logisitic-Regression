@@ -110,9 +110,3 @@ print("Optimized weights:", W)
 # - The third value (-0.29945357) demonstrates the impact of 'Size' on Dog classification. A negative weight
 #   here suggests that larger 'Size' values decrease the likelihood of the sample being classified as a Dog.
 
-# To use these weights for prediction:
-# 1. Compute the weighted sum of the input features and the corresponding weights for each class,
-#    including the bias term.
-# 2. Apply the softmax function to the weighted sums to obtain the probability distribution across
-#    the classes for a given sample.
-# 3. The class with the highest probability is the predicted class for the sample.
