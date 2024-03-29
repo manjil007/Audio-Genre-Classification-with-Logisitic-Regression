@@ -28,13 +28,15 @@ class LogisticRegression:
 
         for epoch in range(self.epochs):
             Z = np.dot(input_features, self.weight)  # Linear predictions
+            print("Z = ", Z)
             P = GradientDescent.softmax(Z)  # Softmax probabilities
-
+            print("p = ", P)
             # Gradient computation
             gradient = np.dot(input_features.T, (P - target_labels)) / m + self.lambda_ * self.weight
-
+            print("gradient = ", gradient)
             # Weight update
             self.weight -= self.alpha * gradient
+            print("weight = ", self.weight)
 
     def predict(self, input_features):
         Z = np.dot(input_features, self.weight)
