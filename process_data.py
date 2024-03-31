@@ -10,50 +10,14 @@ from sklearn.decomposition import PCA
 # Define a function to extract features from an audio file
 def extract_features(file_path):
     audio, sample_rate = librosa.load(file_path, res_type='kaiser_fast')
-    mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
+    mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40) # maybe we should use n_mfcc=13 and sample 5 segments of each audio file instead then use pca
     mfccs_processed = np.mean(mfccs.T, axis=0)
 
     # Add more feature extractions here
-    # Example: chroma = np.mean(librosa.feature.chroma_stft(y=audio, sr=sample_rate).T, axis=0)
+    chroma_stft = np.mean(librosa.feature.chroma_stft(y=audio, sr=sample_rate).T, axis=0)
 
-    return mfccs_processed  # Modify this if you extract more features
-
-
-def extract_features_fromSTR(file_path, feature, **kwargs):
-    spectral_functions = {
-        'spectral_centroid': librosa.feature.spectral_centroid,
-        'spectral_bandwidth': librosa.feature.spectral_bandwidth,
-        'spectral_contrast': librosa.feature.spectral_contrast,
-        'spectral_flatness': librosa.feature.spectral_flatness,
-        # Add more features as needed
-    }
-    special_args_functions = {
-        # these ones only need audio as the first argument and not sr
-        'chroma_stft': librosa.feature.chroma_stft,
-        'zero_crossing': librosa.feature.zero_crossing_rate,
-        'short_time_fourier': librosa.stft,
-        # add more features as needed
-    }
-
-    try:
-        audio, sr = librosa.load(file_path, res_type='kaiser_fast')
-        if feature in special_args_functions:
-            extracted = special_args_functions[feature](y=audio, **kwargs)
-        elif feature in spectral_functions:
-            extracted = spectral_functions[feature](y=audio, sr=sr, **kwargs)
-        else:
-            raise ValueError(f"Feature '{feature}' is not supported.")
-
-    except ValueError as e:
-        print("ValueError encountered while parsing file:", file_path)
-        print("Error message:", e)
-        return None
-    except Exception as e:
-        print("Error encountered while parsing file:", file_path)
-        print("Error message:", e)
-        return None
-
-    return np.mean(extracted.T, axis=0)
+    extracted_features = np.hstack((mfccs_processed, chroma_stft))  # Modify this if you extract more features
+    return extracted_features
 
 
 # Prepare to collect features and labels
@@ -70,17 +34,7 @@ for genre in genres:
             file_path = os.path.join(genre_path, filename)
             try:
                 # Extract features and append them to the list, along with the genre label
-                mfcc = extract_features(file_path)
-                zero_crossing = extract_features_fromSTR(file_path, 'zero_crossing')
-                chroma_stft = extract_features_fromSTR(file_path, 'chroma_stft')
-                stft = extract_features_fromSTR(file_path, 'short_time_fourier', n_fft=2048, hop_length=512)
-                centroid = extract_features_fromSTR(file_path, 'spectral_centroid')
-                bandwidth = extract_features_fromSTR(file_path, 'spectral_bandwidth')
-                contrast = extract_features_fromSTR(file_path, 'spectral_contrast')
-                #flatness = extract_features_fromSTR(file_path, 'spectral_flatness')
-                combined_features = np.hstack((mfcc, chroma_stft))
-
-                features.append(combined_features)
+                features.append(extract_features(file_path))
                 labels.append(genre)
             except Exception as e:
                 print(f"Error processing {file_path}: {e}")
@@ -105,17 +59,7 @@ for filename in os.listdir(test_path):
     if filename.endswith('.au'):
         file_path = os.path.join(test_path, filename)
         try:
-            test_mfcc = extract_features(file_path)
-            test_zero_crossing = extract_features_fromSTR(file_path, 'zero_crossing')
-            test_chroma_stft = extract_features_fromSTR(file_path, 'chroma_stft')
-            test_centroid = extract_features_fromSTR(file_path, 'spectral_centroid')
-            test_bandwidth = extract_features_fromSTR(file_path, 'spectral_bandwidth')
-            test_contrast = extract_features_fromSTR(file_path, 'spectral_contrast')
-
-            # Extract features and append them to the list
-            combined_test_features = np.hstack((test_mfcc, test_chroma_stft))
-            test_features.append(combined_test_features)
-            #test_features.append(extract_features(file_path))
+            test_features.append(extract_features(file_path))
             test_filenames.append(filename)  # Store the filename
         except Exception as e:
             print(f"Error processing {file_path}: {e}")
