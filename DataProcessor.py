@@ -159,16 +159,6 @@ features, labels = process_dataset(root_dir, features_to_extract)
 print("Features shape:", features.shape)
 print("Labels shape:", labels.shape)
 
-# Proceed with combining features and labels, and storing them in a CSV file as before
-
-
-
-root_dir = 'data/train'
-
-features, labels = process_dataset(root_dir)
-print("feature = ", len(features))
-print("labels = ", labels)
-
 # Convert labels to a column vector for concatenation
 labels_column = labels.reshape(-1, 1)
 
