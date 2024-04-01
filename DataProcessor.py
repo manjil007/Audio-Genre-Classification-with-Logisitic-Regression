@@ -3,6 +3,20 @@ import numpy as np
 import pandas as pd
 from test import extract_mfccs, extract_spectral_centroid, extract_spectral_flatness, \
                   extract_chroma_stft, extract_short_time_fourier, extract_zero_crossing
+import librosa
+
+def calculate_total_duration(audio_file):
+    """
+    Calculates the total duration of an audio file.
+
+    Parameters:
+    - audio_file: Path to the audio file.
+
+    Returns:
+    - duration: Total duration of the audio file in seconds.
+    """
+    y, sr = librosa.load(audio_file, sr=None)
+    return librosa.get_duration(y=y, sr=sr)
 
 def process_dataset(root_dir, segments=10):
     """
@@ -28,11 +42,12 @@ def process_dataset(root_dir, segments=10):
 
             if file.endswith('.mp3') or file.endswith('.wav') or file.endswith('.au'):
                 try:
+                    total_duration = calculate_total_duration(file_path)
                     segments_features = []
                     for segment_index in range(segments):
                         start_time = segment_index * (total_duration / segments)
                         end_time = (segment_index + 1) * (total_duration / segments)
-                        segment_file_path = f"{file_path}_{segment_index}"
+                        segment_file_path = f"{file_path[:-4]}_{segment_index}.wav"
 
                         segment_features = []
                         for feature_function in feature_functions.values():
@@ -74,5 +89,6 @@ feature_columns = ['feature_' + str(i + 1) for i in range(features.shape[1])]
 df = pd.DataFrame(combined_data, columns=feature_columns + ['Genre'])
 
 df.to_csv('music_genre_dataset.csv', index=False)
+
 
 
