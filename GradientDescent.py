@@ -66,53 +66,7 @@ def gradient_descent(X, Y, alpha, epochs, lambda_):
     return W
 
 
-# Example usage:
-# Define input features and target classes
-X = np.array([[2, 60, 1],  # Added 1 for bias
-              [8, 30, 1],  # Added 1 for bias
-              [12, 10, 1]])  # Added 1 for bias
-
-Y = np.array([[1, 0, 0],  # One-hot encoding for Bird
-              [0, 1, 0],  # One-hot encoding for Cat
-              [0, 0, 1]])  # One-hot encoding for Dog
-
-alpha = 0.01  # Learning rate
-epochs = 1000  # Number of epochs for gradient descent
-lambda_ = 0.01  # Regularization parameter
-
-W = gradient_descent(X, Y, alpha, epochs, lambda_)
-print("Optimized weights:", W)
 
 
-# Optimized weights explanation:
-# Optimized weights: [[-0.92529693,  0.09790189,  0.82739504],
-#                     [ 0.21098705,  0.08846652, -0.29945357],
-#                     [-0.06307854,  0.0082568,   0.05482174]]
-# Each row in the weights matrix corresponds to a different feature of the input data,
-# and each column corresponds to a different class (Bird, Cat, Dog).
 
-# First Row (Bias Terms):
-# - The first row contains the bias weights for each class.
-# - The first value (-0.92529693) is the bias for the Bird class. It adjusts the classification threshold
-#   independently of the input features, influencing the base likelihood of classifying a sample as a Bird.
-# - The second value (0.09790189) is the bias for the Cat class, serving a similar purpose for Cat classification.
-# - The third value (0.82739504) is the bias for the Dog class, adjusting the base likelihood of classifying
-#   a sample as a Dog.
 
-# Second Row (Weights for the 'Size' Feature):
-# - The second row contains the weights associated with the 'Size' feature for each class.
-# - The first value (0.21098705) indicates how changes in the 'Size' feature affect the probability
-#   of the sample being classified as a Bird. A positive weight suggests that larger values of 'Size'
-#   increase the likelihood of the sample being a Bird.
-# - The second value (0.08846652) shows the influence of 'Size' on classifying a sample as a Cat.
-#   Similarly, a positive value here indicates that larger 'Size' values slightly increase the likelihood
-#   of Cat classification.
-# - The third value (-0.29945357) demonstrates the impact of 'Size' on Dog classification. A negative weight
-#   here suggests that larger 'Size' values decrease the likelihood of the sample being classified as a Dog.
-
-# To use these weights for prediction:
-# 1. Compute the weighted sum of the input features and the corresponding weights for each class,
-#    including the bias term.
-# 2. Apply the softmax function to the weighted sums to obtain the probability distribution across
-#    the classes for a given sample.
-# 3. The class with the highest probability is the predicted class for the sample.
