@@ -42,7 +42,7 @@ def extract_features(file_path, n_mfcc=40, n_segments=5):
     return features
 
 
-def process_dataset_for_training(root_dir_train='data/train', n_mfcc=40, n_segments=5):
+def process_dataset_for_training(root_dir_train='data/train', n_mfcc=40, n_segments=5, name='5_segments_chroma_stft_and_mfcc.csv'):
     features = []
     labels = []
     genres = os.listdir(root_dir_train)
@@ -70,7 +70,7 @@ def process_dataset_for_training(root_dir_train='data/train', n_mfcc=40, n_segme
     feature_columns = ['feature_' + str(i + 1) for i in range(len(features[1]))]
     df = pd.DataFrame(combined_data, columns=feature_columns + ['Genre'])
 
-    df.to_csv('extracted_dataset.csv', index=False)
+    df.to_csv(name, index=False)
 
 
 process_dataset_for_training(root_dir_train='data/train', n_mfcc=40, n_segments=5)
