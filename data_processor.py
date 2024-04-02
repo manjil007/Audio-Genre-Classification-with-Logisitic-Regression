@@ -14,7 +14,7 @@ def extract_features(file_path, n_mfcc=40, n_segments=5):
     - n_segments: Number of segments to divide the audio into.
 
     Returns:
-    - features: Extracted features.
+    - features: Extracted features with features for n_segment number of songs.
     """
     audio, sample_rate = librosa.load(file_path, res_type='kaiser_fast')
 
@@ -37,7 +37,7 @@ def extract_features(file_path, n_mfcc=40, n_segments=5):
         mfccs = (np.mean(librosa.feature.mfcc(y=segment, sr=sample_rate, n_mfcc=n_mfcc, hop_length=hop_length).T, axis=0))
         chroma_stft = (np.mean(librosa.feature.chroma_stft(y=segment, sr=sample_rate).T, axis=0))
 
-        features.extend(np.hstack((mfccs, chroma_stft)))
+        features.append(np.hstack((mfccs, chroma_stft)))
 
     return features
 
@@ -52,8 +52,9 @@ def process_dataset_for_training(root_dir_train='data/train', n_mfcc=40, n_segme
             if filename.endswith('.au'):
                 file_path = os.path.join(genre_path, filename)
                 try:
-                    features.append(extract_features(file_path, n_mfcc=n_mfcc, n_segments=n_segments))
-                    labels.append(genre)
+                    segment_features = (extract_features(file_path, n_mfcc=n_mfcc, n_segments=n_segments))
+                    features.extend(segment_features)
+                    labels.extend([genre] * n_segments)
                 except Exception as e:
                     print(f"Error processing {file_path}: {e}")
 
