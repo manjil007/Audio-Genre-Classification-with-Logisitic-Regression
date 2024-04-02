@@ -3,7 +3,7 @@ import numpy as np
 
 
 class LogisticRegression:
-    def __init__(self, learningRate=0.01, epochs=1000, lambda_=0.01):
+    def __init__(self, learningRate, epochs, lambda_):
         """
         Initializes the logistic regression model.
         :param learningRate: (alpha) learning rate for gradient descent / controls step size
