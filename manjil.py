@@ -19,7 +19,6 @@ def extract_features(file_path, n_mfcc):
     zero_crossing_rate = np.mean(librosa.feature.zero_crossing_rate(audio).T, axis=0)
     energy = np.mean(librosa.feature.rms(y=audio).T, axis=0)
     features = np.hstack((mfccs, chroma, spectral_contrast, zero_crossing_rate, energy))
-    print("sr = ", sample_rate)
     return features
 
 
