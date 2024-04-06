@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 import numpy as np
 
 
@@ -110,4 +108,3 @@ class LogisticRegression:
         predictions = self.predict(input_features)
         accuracy = np.mean(predictions == np.argmax(target_labels, axis=1))
         return accuracy
->>>>>>> Stashed changes
