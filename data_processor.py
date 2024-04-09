@@ -48,18 +48,14 @@ def extract_features(file_path, n_mfcc=20):
     Returns:
     - avg_features: Averaged extracted features across different sampling rates.
     """
-    sr = 22500
-    feature_list = []
-
-    audio, sample_rate = librosa.load(file_path, sr=sr, res_type='kaiser_fast')
+    audio, sample_rate = librosa.load(file_path, res_type='kaiser_fast', sr=25000)
     stft = np.abs(librosa.stft(audio))
     mfccs = np.mean(librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc).T, axis=0)
-    chroma_stft = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T, axis=0)
+    chroma = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T, axis=0)
     spectral_contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T, axis=0)
-    spectral_bandwidth = np.mean(librosa.feature.spectral_bandwidth(y=audio, sr=sample_rate).T, axis=0)
-    zero_crossing_rate = np.mean(librosa.feature.zero_crossing_rate(y=audio).T, axis=0)
-    rmse = np.mean(librosa.feature.rms(y=audio).T, axis=0)
-    features = np.hstack((mfccs, chroma_stft, spectral_contrast, spectral_bandwidth, rmse))
+    zero_crossing_rate = np.mean(librosa.feature.zero_crossing_rate(audio).T, axis=0)
+    energy = np.mean(librosa.feature.rms(y=audio).T, axis=0)
+    features = np.hstack((mfccs, chroma, spectral_contrast, zero_crossing_rate, energy))
 
     return features
 
@@ -119,12 +115,10 @@ def process_dataset_for_testing(root_dir_test):
             except Exception as e:
                 print(f"Error processing {file_path}: {e}")
 
-    # Convert list of features to NumPy array
     features = np.array(features)
 
     feature_columns = ['feature_' + str(i + 1) for i in range(features.shape[1])]
     df = pd.DataFrame(features, columns=feature_columns)
-    # Add filenames as an identification column
     df['id'] = filenames
 
     name = 'test_features_not22500.csv'

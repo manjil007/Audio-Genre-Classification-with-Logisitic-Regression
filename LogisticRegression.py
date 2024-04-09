@@ -1,8 +1,7 @@
 import numpy as np
 
-
 class LogisticRegression:
-    def __init__(self, learningRate, epochs, lambda_, regularization='L2', loss_threshold=0.01):
+    def __init__(self, learningRate, epochs, lambda_, regularization='L2', loss_threshold=0.125):
         """
         Initializes the logistic regression model.
         :param learningRate: (alpha) learning rate for gradient descent / controls step size
@@ -15,6 +14,7 @@ class LogisticRegression:
         self.weight = None
         self.regularization = regularization
         self.loss_threshold = loss_threshold
+        self.loss_history = []
 
     def softmax(self, Z):
         """
@@ -45,7 +45,6 @@ class LogisticRegression:
                            probabilities for all classes sum to 1.
         """
         e_Z = np.exp(Z - np.max(Z, axis=1, keepdims=True))
-        # Normalize to get probabilities
         softmax_probs = e_Z / e_Z.sum(axis=1, keepdims=True)
         return softmax_probs
 
@@ -74,10 +73,18 @@ class LogisticRegression:
             P = self.softmax(Z)
             target_labels_dense = target_labels.toarray()
             loss = -np.mean(target_labels_dense * np.log(P + 1e-9))
+            self.loss_history.append(loss)
             if loss < self.loss_threshold:
                 print(f"Stopping early due to loss threshold met: {loss} at epoch {epoch}")
                 break
             gradient = np.dot(input_features.T, (P - target_labels)) / m + self.lambda_ * self.weight
+            self.weight -= self.alpha * gradient
+
+            if self.regularization == 'L2':
+                gradient += (self.lambda_ / m) * self.weight
+            elif self.regularization == 'L1':
+                gradient += (self.lambda_ / m) * np.sign(self.weight)
+
             self.weight -= self.alpha * gradient
 
     def predict(self, input_features):

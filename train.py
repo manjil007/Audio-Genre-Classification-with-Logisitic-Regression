@@ -4,10 +4,10 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
 from sklearn.decomposition import PCA
 from LogisticRegression import LogisticRegression
 from sklearn.model_selection import KFold
+import matplotlib.pyplot as plt
 
-# Load pre-extracted features from CSV
-train_df = pd.read_csv('processed_data/train_features_not22500.csv')  # Adjust this path
-test_df = pd.read_csv('venv/test_features_not22500.csv')  # Adjust this path
+train_df = pd.read_csv('train_features.csv')
+test_df = pd.read_csv('test_features.csv')
 
 # Training data
 X_train = train_df.drop(['Genre'], axis=1).values
@@ -31,9 +31,10 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # PCA for dimensionality reduction
-pca = PCA(n_components=0.95)
+pca = PCA(n_components=0.99)
 X_train_pca = pca.fit_transform(X_train_scaled)
 X_test_pca = pca.transform(X_test_scaled)
+print("number o features after pca = ", X_train_pca.shape[1])
 
 # Prepare cross-validation
 kf = KFold(n_splits=3, shuffle=True, random_state=42)
@@ -45,7 +46,7 @@ for train_index, test_index in kf.split(X_train_pca, y_train_encoded):
     X_cv_train, X_cv_test = X_train_pca[train_index], X_train_pca[test_index]
     y_cv_train, y_cv_test = y_train_onehot[train_index], y_train_onehot[test_index]
 
-    model_cv = LogisticRegression(learningRate=0.1, epochs=10000, lambda_= 0.1, regularization='L2')
+    model_cv = LogisticRegression(learningRate=0.01, epochs=1000, lambda_ = 0.001, regularization='L2')
     model_cv.fit(X_cv_train, y_cv_train)
 
     predictions = model_cv.predict(X_cv_test)
@@ -75,14 +76,23 @@ total_predictions = len(evaluation_df)
 average_accuracy = true_predictions_count / total_predictions
 print(f'Average CV Accuracy: {average_accuracy}')
 
-model = LogisticRegression(learningRate=0.1, epochs=1000, lambda_=0.1)
+model = LogisticRegression(learningRate=0.01, epochs=1000, lambda_=0.001)
 model.fit(X_train_pca, y_train_onehot)
 
 test_predictions = model.predict(X_test_pca)
 test_predicted_labels = label_encoder.inverse_transform(test_predictions)
 
 predictions_df = pd.DataFrame({'id': test_ids, 'predicted_genre': test_predicted_labels})
-predictions_output_path = 'test_predictions_L2.csv'
+predictions_output_path = 'test_predictions.csv'
 predictions_df.to_csv(predictions_output_path, index=False)
 
 print(f'Test predictions saved to {predictions_output_path}')
+
+# Assuming `model` is your Logistic Regression model after fitting
+loss_history = model.loss_history
+
+plt.plot(loss_history)
+plt.title('Gradient Descent: Loss vs. Epochs')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.savefig('loss.png')
