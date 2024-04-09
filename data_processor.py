@@ -4,9 +4,42 @@ import librosa
 import pandas as pd
 
 
+# def extract_features(file_path, n_mfcc=20):
+#     """
+#     Extracts features from an audio file using multiple sampling rates and averages the features.
+#
+#     Parameters:
+#     - file_path: Path to the audio file.
+#     - n_mfcc: Number of MFCCs to extract.
+#
+#     Returns:
+#     - avg_features: Averaged extracted features across different sampling rates.
+#     """
+#     sampling_rates = np.arange(15000, 20001, 5000)  # Array of sampling rates from 5000 to 50000
+#     feature_list = []  # List to store feature arrays for each sampling rate
+#     i = 0
+#     for sr in sampling_rates:
+#         audio, sample_rate = librosa.load(file_path, sr=sr, res_type='kaiser_fast')
+#         stft = np.abs(librosa.stft(audio))
+#         mfccs = np.mean(librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc).T, axis=0)
+#         chroma_stft = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T, axis=0)
+#         spectral_contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T, axis=0)
+#         spectral_bandwidth = np.mean(librosa.feature.spectral_bandwidth(y=audio, sr=sample_rate).T, axis=0)
+#        # zero_crossing_rate = np.mean(librosa.feature.zero_crossing_rate(y=audio).T, axis=0)
+#         rmse = np.mean(librosa.feature.rms(y=audio).T, axis=0)
+#         # Append the computed features for the current sampling rate to the list
+#         features = np.hstack((mfccs, chroma_stft, spectral_contrast, spectral_bandwidth, rmse))
+#         feature_list.append(features)
+#
+#     # Convert the list of features to a NumPy array and average across all sampling rates
+#     avg_features = np.mean(np.array(feature_list), axis=0)
+#
+#     return avg_features
+
+
 def extract_features(file_path, n_mfcc=20):
     """
-    Extracts features from an audio file using multiple sampling rates and averages the features.
+    Extracts features from an audio file.
 
     Parameters:
     - file_path: Path to the audio file.
@@ -15,31 +48,26 @@ def extract_features(file_path, n_mfcc=20):
     Returns:
     - avg_features: Averaged extracted features across different sampling rates.
     """
-    sampling_rates = np.arange(15000, 50001, 5000)  # Array of sampling rates from 5000 to 50000
-    feature_list = []  # List to store feature arrays for each sampling rate
+    sr = 22500
+    feature_list = []
 
-    for sr in sampling_rates:
-        audio, sample_rate = librosa.load(file_path, sr=sr, res_type='kaiser_fast')
-        stft = np.abs(librosa.stft(audio))
-        mfccs = np.mean(librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc).T, axis=0)
-        chroma_stft = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T, axis=0)
-        spectral_contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T, axis=0)
-        spectral_bandwidth = np.mean(librosa.feature.spectral_bandwidth(y=audio, sr=sample_rate).T, axis=0)
-        zero_crossing_rate = np.mean(librosa.feature.zero_crossing_rate(y=audio).T, axis=0)
-        rmse = np.mean(librosa.feature.rms(y=audio).T, axis=0)
-        # Append the computed features for the current sampling rate to the list
-        features = np.hstack((mfccs, chroma_stft, spectral_contrast, spectral_bandwidth, zero_crossing_rate, rmse))
-        feature_list.append(features)
+    audio, sample_rate = librosa.load(file_path, sr=sr, res_type='kaiser_fast')
+    stft = np.abs(librosa.stft(audio))
+    mfccs = np.mean(librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=n_mfcc).T, axis=0)
+    chroma_stft = np.mean(librosa.feature.chroma_stft(S=stft, sr=sample_rate).T, axis=0)
+    spectral_contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T, axis=0)
+    spectral_bandwidth = np.mean(librosa.feature.spectral_bandwidth(y=audio, sr=sample_rate).T, axis=0)
+    zero_crossing_rate = np.mean(librosa.feature.zero_crossing_rate(y=audio).T, axis=0)
+    rmse = np.mean(librosa.feature.rms(y=audio).T, axis=0)
+    features = np.hstack((mfccs, chroma_stft, spectral_contrast, spectral_bandwidth, rmse))
 
-    # Convert the list of features to a NumPy array and average across all sampling rates
-    avg_features = np.mean(np.array(feature_list), axis=0)
-
-    return avg_features
+    return features
 
 
 def process_dataset_for_training(root_dir_train):
     features = []
     labels = []
+    j = 0
     genres = os.listdir(root_dir_train)
     for genre in genres:
         genre_path = os.path.join(root_dir_train, genre)
@@ -63,7 +91,7 @@ def process_dataset_for_training(root_dir_train):
     feature_columns = ['feature_' + str(i + 1) for i in range(len(features[1]))]
     df = pd.DataFrame(combined_data, columns=feature_columns + ['Genre'])
 
-    name = 'train_features.csv'
+    name = 'train_features_not22500.csv'
 
     df.to_csv(name, index=False)
 
@@ -99,7 +127,7 @@ def process_dataset_for_testing(root_dir_test):
     # Add filenames as an identification column
     df['id'] = filenames
 
-    name = 'test_features.csv'
+    name = 'test_features_not22500.csv'
     df.to_csv(name, index=False)
 
 

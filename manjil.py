@@ -7,10 +7,7 @@ from sklearn.decomposition import PCA
 from LogisticRegression import LogisticRegression
 from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score
-<<<<<<< HEAD
-=======
 import resampy
->>>>>>> main
 
 
 def extract_features(file_path, n_mfcc):
@@ -21,26 +18,11 @@ def extract_features(file_path, n_mfcc):
     spectral_contrast = np.mean(librosa.feature.spectral_contrast(S=stft, sr=sample_rate).T, axis=0)
     zero_crossing_rate = np.mean(librosa.feature.zero_crossing_rate(audio).T, axis=0)
     energy = np.mean(librosa.feature.rms(y=audio).T, axis=0)
-<<<<<<< HEAD
-    y_harmonic, y_percussive = librosa.effects.hpss(audio)
-    harmonic = np.mean(librosa.feature.rms(y=y_harmonic).T, axis=0)
-    percussive = np.mean(librosa.feature.rms(y=y_percussive).T, axis=0)
-    tempo, _ = librosa.beat.beat_track(y=audio, sr=sample_rate)
-    spectral_rolloff = np.mean(librosa.feature.spectral_rolloff(y=audio, sr=sample_rate).T, axis=0)
-    features = np.hstack((mfccs, chroma, spectral_contrast, zero_crossing_rate, energy, harmonic, percussive, tempo, spectral_rolloff))
-    return features
-
-
-def process_and_train_model(train_dir, test_dir, n_mfcc=3, output_dir='predictions'):
-=======
     features = np.hstack((mfccs, chroma, spectral_contrast, zero_crossing_rate, energy))
     return features
 
 
-
-
 def process_and_train_model(train_dir, test_dir, n_mfcc=13, output_dir='predictions'):
->>>>>>> main
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -81,11 +63,7 @@ def process_and_train_model(train_dir, test_dir, n_mfcc=13, output_dir='predicti
     print(f"Average Cross-Validation Accuracy: {np.mean(accuracies)}")
 
     # Retrain model on the full training set
-<<<<<<< HEAD
-    model = LogisticRegression(learningRate=0.01, epochs=1000, lambda_=0.01)
-=======
     model = LogisticRegression(learningRate=0.1, epochs=1000, lambda_=0.01)
->>>>>>> main
     model.fit(train_features_pca, labels_onehot)
 
     # Process and predict on the test set
@@ -104,11 +82,8 @@ def process_and_train_model(train_dir, test_dir, n_mfcc=13, output_dir='predicti
 
     # Save predictions to CSV
     predictions_df = pd.DataFrame({'id': test_filenames, 'class': test_predictions_labels})
-    predictions_df.to_csv(os.path.join(output_dir, 'test_predictions_L2.csv'), index=False)
+    predictions_df.to_csv(os.path.join(output_dir, 'venv/test_predictions_L2.csv'), index=False)
 
 
 # Example usage
 process_and_train_model('data/train', 'data/test', n_mfcc=20, output_dir='predictions')
-
-
-
