@@ -32,14 +32,13 @@ The script will train the Logistic Regression model, evaluate its performance, a
 ### LogisticRegression Class
 The core of the project is the LogisticRegression class, which encapsulates the logistic regression algorithm. It offers functionality to fit the model to training data, make predictions on new data, and evaluate the model's accuracy.
 
-### Running the Scripts
-To run the feature extraction script:
-python data_processor.py
+### Running the Scripts and Description
 
-To train the model and generate predictions:
-python train.py
+1. **Feature Extraction**: The python script 'data_processor.py' contains all functions necessary for the feature extraction from audio files and to creae a CSV file that will be used by our model.
 
-This will show the cross validation accuracy as well as create a prediction file which can be submitted in the Kaggle to check accuracy.
+2. **Training Model**: The python script 'train.py' contains all functions necessary for the training of our model and generate predictions. Also prints out the cross validation accuracy as well as create a prediction file which can be submitted in the Kaggle to check accuracy. It calls 'LogisticRegression.py' for the model.
+
+3. **Logistic Regression**: The python script 'LogisticRegression.py' contains the algorithm for logistic regression. It is called by 'train.py'
 
 ### Highest Kaggle Scores
 Accuracy: 65% Leaderboard Position: 9 Date Submitted : 04/08/2024
