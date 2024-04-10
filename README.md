@@ -43,6 +43,7 @@ This will show the cross validation accuracy as well as create a prediction file
 
 ### Highest Kaggle Scores
 Accuracy: 65% Leaderboard Position: 9 Date Submitted : 04/08/2024
+
 Accuracy: 64% Date Submitted : 04/08/2024
 
 ### Contributions
