@@ -40,6 +40,8 @@ The core of the project is the LogisticRegression class, which encapsulates the 
 
 3. **Logistic Regression**: The python script 'LogisticRegression.py' contains the algorithm for logistic regression. It is called by 'train.py'
 
+4. **Other Models**: The python script 'othermodels.py' contains the implementation of the other models - Random Forest, Gaussian Naive Bayes, Gradient Boosting Machines, and Support Vector Machines (SVM).
+
 ### Highest Kaggle Scores
 Accuracy: 65% Leaderboard Position: 9 Date Submitted : 04/08/2024
 
