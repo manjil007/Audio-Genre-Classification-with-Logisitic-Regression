@@ -41,3 +41,8 @@ python train.py
 
 This will show the cross validation accuracy as well as create a prediction file which can be submitted in the Kaggle to check accuracy.
 
+### Highest Kaggle Scores
+Accuracy: 65% Leaderboard Position: 9 Date Submitted : 04/08/2024
+Accuracy: 64% Date Submitted : 04/08/2024
+
+
