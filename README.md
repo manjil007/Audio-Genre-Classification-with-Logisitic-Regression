@@ -53,7 +53,6 @@ Vincent - Worked on the Logistic Regression code by applying Manjil’s code on 
 
 Erick - Conducted research on spectral features and their potential relevance in genre classification. Worked on an early version of extracting these features which was later integrated into the completed data_processing file. Briefly worked on implementing KFold random_state, however, as it did not render accuracy improvements it was discarded. Worked on gradient descent, PCA, optimizations, and standardization in the report.
 
-Abhinav - Researched librosa techniques and worked on processing data and feature extraction. Also, worked on sectioning of the songs and recombining sections from the same genre to see if they produced better results with more data points. For experiments, worked on applying different sampling rates for the whole songs and different hop rates to find the most accurate method. In the report, worked on the introduction, extracting information, results, and conclusion.
-
+Abhinav - Researched librosa techniques and worked on processing data and feature extraction. Worked on sectioning of the songs and recombining sections from the same genre to see if they produced better results. For experiments, applied different sampling rates and hop rates to find the most accurate method. In the report, worked on the introduction, extracting information, results, and conclusion.
 
 
