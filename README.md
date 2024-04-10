@@ -55,4 +55,5 @@ Erick - Conducted research on spectral features and their potential relevance in
 
 Abhinav - Researched librosa techniques and worked on processing data and feature extraction. Worked on sectioning of the songs and recombining sections from the same genre to see if they produced better results. For experiments, applied different sampling rates and hop rates to find the most accurate method. In the report, worked on the introduction, extracting information, results, and conclusion.
 
-
+## Acknowledgments
+Thanks to Professor. Estrada, and Teaching Assistants for their support during the project. Thanks to the our classmates and the machine learning community at large for the inspiration and support to develop this project.
